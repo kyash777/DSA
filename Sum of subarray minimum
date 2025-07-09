@@ -7,3 +7,68 @@ Examples:
 Input: arr[] = [3, 1, 2, 4]
 Output: 17
 Explanation: Subarrays are [3], [1], [2], [4], [3, 1], [1, 2], [2, 4], [3, 1, 2], [1, 2, 4], [3, 1, 2, 4]. Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1. Sum of all these is 17.
+
+class Solution {
+    public int sumSubMins(int[] arr) {
+        
+        int n=arr.length;
+        
+        int nextGreater[]=new int[n];
+        int prevSmaller[]=new int[n];
+        
+        Stack<Integer>st=new Stack<>();
+        
+        //Prev Smaller
+        
+        for(int i=0;i<n;i++){
+          
+            while(!st.isEmpty() && arr[st.peek()]>arr[i] ){
+                st.pop();
+            }
+            
+            if(!st.isEmpty()){
+                prevSmaller[i]=st.peek();
+            }else{
+                prevSmaller[i]=-1;
+            }
+            
+            st.push(i);
+        }
+        
+        st.clear();
+        
+        // Next Greater
+        
+        for(int i=n-1;i>=0;i--){
+            
+            while(!st.empty() && arr[st.peek()]>=arr[i]){
+                st.pop();
+            }
+            
+            if(!st.isEmpty()){
+                nextGreater[i]=st.peek();
+            }else{
+                nextGreater[i]=n;
+            }
+            
+            st.push(i);
+        }
+        
+        // for(int i=0;i<n;i++){
+        //     System.out.print(prevSmaller[i]+" ");
+        // }
+        // System.out.println();
+        // for(int i=0;i<n;i++){
+        //     System.out.print(nextGreater[i]+" ");
+        // }
+        // System.out.println();
+        
+        int res=0;
+        
+        for(int i=0;i<n;i++){
+            res=res+arr[i]*(i-prevSmaller[i])*(nextGreater[i]-i);
+        }
+        
+        return res;
+    }
+}
